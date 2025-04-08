@@ -54,9 +54,10 @@ public class YSQLCatalog implements TestOracle<YSQLGlobalState> {
                 // TODO concurrent DDLs may produce a lot of noise in test logs so its disabled right now
                 // added timeout to avoid possible catalog collisions
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000); // 1-second delay to reduce potential DDL overlap
                 } catch (InterruptedException e) {
-                    throw new AssertionError();
+                    Thread.currentThread().interrupt(); // Restore the interrupted status
+                    System.err.println("Thread was interrupted while waiting to avoid catalog collisions.");
                 }
 
                 try {
